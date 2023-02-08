@@ -20,6 +20,7 @@
         app:color2="#CCCCFF"
         app:color3="#40E0D0"
         app:color4="#FF7F50"
+        app:color5="#6495ED"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

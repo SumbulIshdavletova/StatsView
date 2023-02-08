@@ -38,6 +38,7 @@ class StatsView @JvmOverloads constructor(
                 getColor(R.styleable.StatsView_color2, generateRandomColor()),
                 getColor(R.styleable.StatsView_color3, generateRandomColor()),
                 getColor(R.styleable.StatsView_color4, generateRandomColor()),
+                getColor(R.styleable.StatsView_color5, generateRandomColor()),
             )
         }
     }
@@ -89,17 +90,27 @@ class StatsView @JvmOverloads constructor(
         }
         var startAngle = 270F
         val dataSum = data.sum()
+        var angle = 0F
+        canvas.enableZ();
+
         data.forEachIndexed { index, datum ->
             val percent = datum / dataSum
-            val angle = percent * 360F
-            //    val angle = datum * 360F
+            angle = percent * 360F
+            // val angle = datum * 360F
             paint.color = colors.getOrElse(index) { generateRandomColor() }
 
-            canvas.drawArc(oval, startAngle, angle, false, paint)
+           canvas.drawArc(oval, startAngle, angle, false, paint)
             startAngle += angle
-
+//            if(index==3){
+//
+//
+//            }
         }
-        data[0].apply { paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER) }
+        canvas.disableZ();
+        paint.color = colors.getOrElse(4){generateRandomColor()}
+        canvas.drawArc(oval, startAngle, angle, false, paint)
+
+//     data[0].apply { paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER) }
 
         canvas.drawText(
             //   "%.2f%%".format(data.sum() * 100),
