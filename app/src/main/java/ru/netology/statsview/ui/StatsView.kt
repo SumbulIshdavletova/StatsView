@@ -1,10 +1,12 @@
 package ru.netology.statsview.ui
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.annotation.RequiresApi
 import androidx.core.content.withStyledAttributes
 import androidx.core.graphics.setBlendMode
@@ -28,6 +30,9 @@ class StatsView @JvmOverloads constructor(
     private var textSize = AndroidUtils.dp(context, 20).toFloat()
     private var lineWidth = AndroidUtils.dp(context, 5)
     private var colors = emptyList<Int>()
+
+    private var progress = 0F
+    private var valueAnimator: ValueAnimator? = null
 
     init {
         context.withStyledAttributes(attributeSet, R.styleable.StatsView) {
@@ -87,7 +92,7 @@ class StatsView @JvmOverloads constructor(
         if (data.isEmpty()) {
             return
         }
-        var startAngle = 270F
+        var startAngle = -90F
         val dataSum = data.sum()
         data.forEachIndexed { index, datum ->
             val percent = datum / dataSum
@@ -95,7 +100,7 @@ class StatsView @JvmOverloads constructor(
             //    val angle = datum * 360F
             paint.color = colors.getOrElse(index) { generateRandomColor() }
 
-            canvas.drawArc(oval, startAngle, angle, false, paint)
+            canvas.drawArc(oval, startAngle, angle * progress, false, paint)
             startAngle += angle
 
         }
@@ -107,6 +112,25 @@ class StatsView @JvmOverloads constructor(
             center.y + textPaint.textSize / 4,
             textPaint
         )
+    }
+
+    private fun update() {
+        valueAnimator?.let {
+            it.removeAllListeners()
+            it.cancel()
+        }
+        progress = 0F
+
+        valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
+            addUpdateListener { anim ->
+                progress = anim.animatedValue as Float
+                invalidate()
+            }
+            duration = 500
+            interpolator = LinearInterpolator()
+        }.also {
+            it.start()
+        }
     }
 
     private fun generateRandomColor() = Random.nextInt(0xFF000000.toInt(), 0xFFFFFFFF.toInt())
