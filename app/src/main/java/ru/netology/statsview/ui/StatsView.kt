@@ -88,34 +88,31 @@ class StatsView @JvmOverloads constructor(
         if (data.isEmpty()) {
             return
         }
-        var startAngle = 270F
+        var startAngle = -90F
         val dataSum = data.sum()
         var angle = 0F
         paint.color = colors[4]
         canvas.drawCircle(center.x, center.y, radius, paint)
         data.forEachIndexed { index, datum ->
-//            val percent = datum / dataSum
-//            angle = percent * 360F
-             val angle = datum * 360F
+            val percent = datum / dataSum
+            angle = percent * 360F
+            //       val angle = datum * 360F
 
             paint.color = colors.getOrElse(index) { generateRandomColor() }
 
             canvas.drawArc(oval, startAngle, angle, false, paint)
 
             startAngle += angle
-//            if(index==3){
-//
-//            }
 
         }
-//        paint.color = colors.getOrElse(4) { generateRandomColor() }
-//        canvas.drawArc(oval, startAngle, angle, false, paint)
-        //      canvas.drawArc(oval, startAngle, angle, false, paint)
-//     data[0].apply { paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER) }
+        paint.color = colors.getOrElse(0) { generateRandomColor() }
+
+        //         canvas.drawArc(oval, startAngle, angle, false, paint)
+        data[0].apply { canvas.drawArc(oval, startAngle, 1F, false, paint) }
 
         canvas.drawText(
-           "%.2f%%".format(data.sum() * 100),
-           // "100.00%",
+            //     "%.2f%%".format(data.sum() * 100),
+            "100.00%",
             center.x,
             center.y + textPaint.textSize / 4,
             textPaint

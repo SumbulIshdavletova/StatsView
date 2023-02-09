@@ -14,14 +14,14 @@ class MainActivity : AppCompatActivity() {
 
         val view = findViewById<StatsView>(R.id.statsView)
         view.data = listOf(
-//            500F,
-//            800F,
-//            500F,
-//            900F,
-            0.25F,
-            0.25F,
-            0.25F,
-            0.05F,
+            500F,
+            500F,
+            500F,
+            500F,
+//            0.25F,
+//            0.25F,
+//            0.25F,
+//            0.05F,
 
 
         )
