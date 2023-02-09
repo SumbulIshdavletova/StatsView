@@ -99,7 +99,6 @@ class StatsView @JvmOverloads constructor(
             startAngle += angle
 
         }
-        data[0].apply { paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER) }
 
         canvas.drawText(
             //   "%.2f%%".format(data.sum() * 100),
