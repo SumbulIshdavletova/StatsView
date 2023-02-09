@@ -1,9 +1,15 @@
 package ru.netology.statsview
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import ru.netology.statsview.ui.StatsView
 
@@ -13,12 +19,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val view = findViewById<StatsView>(R.id.statsView)
-        view.data = listOf(
-            500F,
-            800F,
-            500F,
-            600F,
-        )
+        view.postDelayed({
+            view.data = listOf(
+                0.25F,
+                0.25F,
+                0.25F,
+                0.25F,
+            )
+        }, 3000)
 
         val textView = findViewById<TextView>(R.id.label)
 
@@ -40,5 +48,52 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         )
+
+        ObjectAnimator.ofFloat(view, "alpha", 0.25F, 1F).apply {
+            startDelay = 500
+            duration = 300
+            interpolator = BounceInterpolator()
+        }.start()
+
+        ObjectAnimator.ofFloat(view, View.ALPHA, 0.25F, 1F).apply {
+            startDelay = 500
+            duration = 300
+            interpolator = BounceInterpolator()
+        }.start()
+
+        val rotation = PropertyValuesHolder.ofFloat(View.ROTATION, 0F, 360F)
+        val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, 0F, 1F)
+        ObjectAnimator.ofPropertyValuesHolder(view, rotation, alpha)
+            .apply {
+                startDelay = 500
+                duration = 500
+                interpolator = LinearInterpolator()
+            }.start()
+
+        view.animate()
+            .rotation(360F)
+            .scaleX(1.2F)
+            .scaleY(1.2F)
+            .setInterpolator(LinearInterpolator())
+            .setStartDelay(500)
+            .setDuration(500)
+            .start()
+
+        val alpha2 = ObjectAnimator.ofFloat(view, View.ALPHA, 0.25F, 1F).apply {
+            duration = 300
+            interpolator = LinearInterpolator()
+        }
+        val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0F, 1F)
+        val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0F, 1F)
+        val scale = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY).apply {
+            duration = 300
+            interpolator = BounceInterpolator()
+        }
+        AnimatorSet().apply {
+            startDelay = 500
+            playSequentially(scale, alpha2)
+
+        }.start()
+
     }
 }

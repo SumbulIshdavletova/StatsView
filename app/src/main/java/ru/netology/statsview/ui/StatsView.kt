@@ -50,14 +50,13 @@ class StatsView @JvmOverloads constructor(
     var data: List<Float> = emptyList()
         set(value) {
             field = value
-            invalidate()
+            update()
         }
     private var radius = 0F
     private var center = PointF()
     private var oval = RectF()
 
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private val paint = Paint(
         Paint.ANTI_ALIAS_FLAG
     ).apply {
@@ -66,6 +65,7 @@ class StatsView @JvmOverloads constructor(
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
     }
+
     private val textPaint = Paint(
         Paint.ANTI_ALIAS_FLAG
     ).apply {
@@ -87,7 +87,6 @@ class StatsView @JvmOverloads constructor(
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onDraw(canvas: Canvas) {
         if (data.isEmpty()) {
             return
@@ -95,9 +94,9 @@ class StatsView @JvmOverloads constructor(
         var startAngle = -90F
         val dataSum = data.sum()
         data.forEachIndexed { index, datum ->
-            val percent = datum / dataSum
-            val angle = percent * 360F
-            //    val angle = datum * 360F
+//            val percent = datum / dataSum
+//            val angle = percent * 360F
+            val angle = datum * 360F
             paint.color = colors.getOrElse(index) { generateRandomColor() }
 
             canvas.drawArc(oval, startAngle, angle * progress, false, paint)
@@ -126,7 +125,7 @@ class StatsView @JvmOverloads constructor(
                 progress = anim.animatedValue as Float
                 invalidate()
             }
-            duration = 500
+            duration = 900
             interpolator = LinearInterpolator()
         }.also {
             it.start()
