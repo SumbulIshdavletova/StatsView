@@ -1,16 +1,13 @@
 package ru.netology.statsview.ui
 
-import android.animation.ObjectAnimator
+
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
-import androidx.annotation.RequiresApi
 import androidx.core.content.withStyledAttributes
-import androidx.core.graphics.setBlendMode
 import ru.netology.statsview.R
 import ru.netology.statsview.utils.AndroidUtils
 import kotlin.math.min
@@ -104,18 +101,10 @@ class StatsView @JvmOverloads constructor(
         )
 
         data.forEachIndexed { index, datum ->
-//            val percent = datum / dataSum
-//            val angle = percent * 360F
-            val angle = datum * 360F
+            val percent = datum / dataSum
+            val angle = percent * 360F
             paint.color = colors.getOrElse(index) { generateRandomColor() }
-//            paint.apply {
-//                animate()
-//                    .rotation(360F)
-//                    //  .setStartDelay(2700)
-//                    .setDuration(1500)
-//                    .setInterpolator(LinearInterpolator())
-//                    .start()
-//            }
+
             canvas.drawArc(oval, startAngle + startingAngle, angle * progress, false, paint)
 
             startAngle += angle

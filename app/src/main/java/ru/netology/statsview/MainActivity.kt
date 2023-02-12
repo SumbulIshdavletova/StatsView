@@ -1,8 +1,7 @@
 package ru.netology.statsview
 
-import android.animation.ObjectAnimator
+
 import android.os.Bundle
-import android.view.View
 import android.view.animation.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,10 +16,10 @@ class MainActivity : AppCompatActivity() {
         val view = findViewById<StatsView>(R.id.statsView)
         view.postDelayed({
             view.data = listOf(
-                0.25F,
-                0.25F,
-                0.25F,
-                0.25F,
+                25F,
+                25F,
+                25F,
+                25F,
             )
         }, 3000)
 
@@ -44,19 +43,6 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         )
-
-//        view.animate()
-//            .rotation(360F)
-//            .setStartDelay(2700)
-//            .setDuration(1500)
-//            .setInterpolator(LinearInterpolator())
-//            .start()
-//
-//        ObjectAnimator.ofFloat(view, View.ROTATION, 0F, 360F).apply {
-//            startDelay = 2700
-//            duration = 1700
-//            interpolator = LinearInterpolator()
-//        }.start()
 
     }
 }
