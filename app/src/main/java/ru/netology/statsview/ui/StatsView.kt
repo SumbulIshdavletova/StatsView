@@ -1,5 +1,6 @@
 package ru.netology.statsview.ui
 
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
@@ -30,8 +31,8 @@ class StatsView @JvmOverloads constructor(
     private var textSize = AndroidUtils.dp(context, 20).toFloat()
     private var lineWidth = AndroidUtils.dp(context, 5)
     private var colors = emptyList<Int>()
-
     private var progress = 0F
+    private var startingAngle = 90F
     private var valueAnimator: ValueAnimator? = null
 
     init {
@@ -93,16 +94,6 @@ class StatsView @JvmOverloads constructor(
         }
         var startAngle = -90F
         val dataSum = data.sum()
-        data.forEachIndexed { index, datum ->
-//            val percent = datum / dataSum
-//            val angle = percent * 360F
-            val angle = datum * 360F
-            paint.color = colors.getOrElse(index) { generateRandomColor() }
-
-            canvas.drawArc(oval, startAngle, angle * progress, false, paint)
-            startAngle += angle
-
-        }
 
         canvas.drawText(
             //   "%.2f%%".format(data.sum() * 100),
@@ -111,6 +102,26 @@ class StatsView @JvmOverloads constructor(
             center.y + textPaint.textSize / 4,
             textPaint
         )
+
+        data.forEachIndexed { index, datum ->
+//            val percent = datum / dataSum
+//            val angle = percent * 360F
+            val angle = datum * 360F
+            paint.color = colors.getOrElse(index) { generateRandomColor() }
+//            paint.apply {
+//                animate()
+//                    .rotation(360F)
+//                    //  .setStartDelay(2700)
+//                    .setDuration(1500)
+//                    .setInterpolator(LinearInterpolator())
+//                    .start()
+//            }
+            canvas.drawArc(oval, startAngle + startingAngle, angle * progress, false, paint)
+
+            startAngle += angle
+
+
+        }
     }
 
     private fun update() {
@@ -119,17 +130,19 @@ class StatsView @JvmOverloads constructor(
             it.cancel()
         }
         progress = 0F
-
-        valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
+        startingAngle = 0F
+        valueAnimator = ValueAnimator.ofFloat(0F, 360F).apply {
             addUpdateListener { anim ->
-                progress = anim.animatedValue as Float
+                progress = anim.animatedValue as Float / 360F
+                startingAngle = anim.animatedValue as Float
                 invalidate()
             }
-            duration = 900
+            duration = 1500
             interpolator = LinearInterpolator()
         }.also {
             it.start()
         }
+
     }
 
     private fun generateRandomColor() = Random.nextInt(0xFF000000.toInt(), 0xFFFFFFFF.toInt())

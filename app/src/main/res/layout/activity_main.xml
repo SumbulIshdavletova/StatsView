@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:interpolator="@android:anim/linear_interpolator">
 
     <TextView
         android:id="@+id/label"
@@ -20,11 +21,16 @@
         app:color2="#CCCCFF"
         app:color3="#40E0D0"
         app:color4="#FF7F50"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="0"
+        android:toDegrees="360"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lineWIdth="16dp"
         app:textSize="40sp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
