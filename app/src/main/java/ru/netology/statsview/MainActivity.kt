@@ -13,17 +13,35 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val view = findViewById<StatsView>(R.id.statsView)
-        view.data = listOf(
-            500F,
-            600F,
-            500F,
-            500F,
-//            0.25F,
-//            0.25F,
-//            0.25F,
-//            0.05F,
+        view.postDelayed({
+            view.data = listOf(
+                25F,
+                25F,
+                25F,
+                25F,
+            )
+        }, 3000)
 
+        val textView = findViewById<TextView>(R.id.label)
 
+        view.startAnimation(
+            AnimationUtils.loadAnimation(this, R.anim.animation).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {
+                        textView.text = "onAnimationStart"
+                    }
+
+                    override fun onAnimationEnd(animation: Animation?) {
+                        textView.text = "onAnimationEnd"
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {
+                        textView.text = "onAnimationRepeat"
+                    }
+
+                })
+            }
         )
+
     }
 }

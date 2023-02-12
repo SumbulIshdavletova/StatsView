@@ -1,13 +1,12 @@
 package ru.netology.statsview.ui
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
-import androidx.annotation.RequiresApi
+import android.view.animation.LinearInterpolator
 import androidx.core.content.withStyledAttributes
-import androidx.core.graphics.setBlendMode
 import ru.netology.statsview.R
 import ru.netology.statsview.utils.AndroidUtils
 import kotlin.math.min
@@ -28,6 +27,9 @@ class StatsView @JvmOverloads constructor(
     private var textSize = AndroidUtils.dp(context, 20).toFloat()
     private var lineWidth = AndroidUtils.dp(context, 5)
     private var colors = emptyList<Int>()
+    private var progress = 0F
+    private var startingAngle = 90F
+    private var valueAnimator: ValueAnimator? = null
 
     init {
         context.withStyledAttributes(attributeSet, R.styleable.StatsView) {
@@ -38,7 +40,6 @@ class StatsView @JvmOverloads constructor(
                 getColor(R.styleable.StatsView_color2, generateRandomColor()),
                 getColor(R.styleable.StatsView_color3, generateRandomColor()),
                 getColor(R.styleable.StatsView_color4, generateRandomColor()),
-                getColor(R.styleable.StatsView_color5, generateRandomColor()),
             )
         }
     }
@@ -46,14 +47,13 @@ class StatsView @JvmOverloads constructor(
     var data: List<Float> = emptyList()
         set(value) {
             field = value
-            invalidate()
+            update()
         }
     private var radius = 0F
     private var center = PointF()
     private var oval = RectF()
 
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private val paint = Paint(
         Paint.ANTI_ALIAS_FLAG
     ).apply {
@@ -62,6 +62,7 @@ class StatsView @JvmOverloads constructor(
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
     }
+
     private val textPaint = Paint(
         Paint.ANTI_ALIAS_FLAG
     ).apply {
@@ -83,39 +84,53 @@ class StatsView @JvmOverloads constructor(
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onDraw(canvas: Canvas) {
         if (data.isEmpty()) {
             return
         }
         var startAngle = -90F
         val dataSum = data.sum()
-        var angle = 0F
-        paint.color = colors[4]
-        canvas.drawCircle(center.x, center.y, radius, paint)
-        data.forEachIndexed { index, datum ->
-            val percent = datum / dataSum
-            angle = percent * 360F
-            //       val angle = datum * 360F
-
-            paint.color = colors.getOrElse(index) { generateRandomColor() }
-
-            canvas.drawArc(oval, startAngle, angle, false, paint)
-
-            startAngle += angle
-
-        }
-        paint.color = colors.getOrElse(0) { generateRandomColor() }
-
-        data[0].apply { canvas.drawArc(oval, startAngle, 1F, false, paint) }
 
         canvas.drawText(
-            //     "%.2f%%".format(data.sum() * 100),
+            //   "%.2f%%".format(data.sum() * 100),
             "100.00%",
             center.x,
             center.y + textPaint.textSize / 4,
             textPaint
         )
+
+        data.forEachIndexed { index, datum ->
+            val percent = datum / dataSum
+            val angle = percent * 360F
+            paint.color = colors.getOrElse(index) { generateRandomColor() }
+
+            canvas.drawArc(oval, startAngle + startingAngle, angle * progress, false, paint)
+
+            startAngle += angle
+
+
+        }
+    }
+
+    private fun update() {
+        valueAnimator?.let {
+            it.removeAllListeners()
+            it.cancel()
+        }
+        progress = 0F
+        startingAngle = 0F
+        valueAnimator = ValueAnimator.ofFloat(0F, 360F).apply {
+            addUpdateListener { anim ->
+                progress = anim.animatedValue as Float / 360F
+                startingAngle = anim.animatedValue as Float
+                invalidate()
+            }
+            duration = 1500
+            interpolator = LinearInterpolator()
+        }.also {
+            it.start()
+        }
+
     }
 
     private fun generateRandomColor() = Random.nextInt(0xFF000000.toInt(), 0xFFFFFFFF.toInt())
