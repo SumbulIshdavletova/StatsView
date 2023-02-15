@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onAnimationRepeat(animation: Animation?) {
                         textView.text = "onAnimationRepeat"
+
                     }
 
                 })

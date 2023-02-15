@@ -109,7 +109,6 @@ class StatsView @JvmOverloads constructor(
 
             startAngle += angle
 
-
         }
     }
 
