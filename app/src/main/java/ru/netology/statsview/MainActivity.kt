@@ -15,10 +15,11 @@ class MainActivity : AppCompatActivity() {
         val view = findViewById<StatsView>(R.id.statsView)
         view.postDelayed({
             view.data = listOf(
-                25F,
-                25F,
-                25F,
-                25F,
+                300F,
+                40F,
+                50F,
+                30F,
+                30F,
             )
         }, 3000)
 
