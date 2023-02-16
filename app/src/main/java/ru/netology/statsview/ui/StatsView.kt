@@ -94,7 +94,7 @@ class StatsView @JvmOverloads constructor(
         paint.color = Color.parseColor("#e6e6e6");
         canvas.drawCircle(center.x, center.y, radius, paint)
         var resultSum = 0F
-            data.forEachIndexed { index, datum ->
+        data.forEachIndexed { index, datum ->
             val percent = datum / dataSum
             val angle = percent * 360F
 
@@ -108,12 +108,15 @@ class StatsView @JvmOverloads constructor(
 
         }
 
+
         canvas.drawText(
             "%.2f%%".format(resultSum * 100 / data[0]),
             center.x,
             center.y + textPaint.textSize / 4,
             textPaint
         )
+
+
     }
 
     private fun update() {
