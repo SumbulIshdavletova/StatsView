@@ -105,7 +105,7 @@ class StatsView @JvmOverloads constructor(
             val angle = percent * 360F
 
             if (index != 0) {
-                paint.color = colors.getOrElse(index) { generateRandomColor() }
+             paint.color = colors.getOrElse(index) { generateRandomColor() }
                 resultSum += datum
 
                 canvas.drawArc(oval, startAngle, angle, false, paint)

@@ -1,5 +1,6 @@
 package ru.netology.statsview
 
+import android.animation.LayoutTransition
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.Animation
@@ -9,6 +10,7 @@ import android.transition.Scene
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.BounceInterpolator
 import ru.netology.statsview.ui.StatsView
 
 class MainActivity : AppCompatActivity() {
@@ -16,16 +18,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val view = findViewById<StatsView>(R.id.statsView)
 
         val root = findViewById<ViewGroup>(R.id.root)
-
-        val scene = Scene.getSceneForLayout(root, R.layout.end_scene, this)
-
-        findViewById<View>(R.id.goButton).setOnClickListener {
-            TransitionManager.go(scene)
+        root.layoutTransition = LayoutTransition().apply {
+            setDuration(2_000)
+            setInterpolator(LayoutTransition.CHANGE_APPEARING, BounceInterpolator())
         }
-        view.animate()
+
+        findViewById<View>(R.id.buttonGo).setOnClickListener {
+            val view = layoutInflater.inflate(R.layout.stats_view, root, false)
+            root.addView(view, 0)
+        }
 
 //        view.startAnimation(
 //            AnimationUtils.loadAnimation(this, R.anim.animation)
