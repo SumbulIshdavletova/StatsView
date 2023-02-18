@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import android.transition.Scene
+import android.transition.TransitionManager
+import android.view.View
+import android.view.ViewGroup
 import ru.netology.statsview.ui.StatsView
 
 class MainActivity : AppCompatActivity() {
@@ -13,36 +17,49 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val view = findViewById<StatsView>(R.id.statsView)
-        view.postDelayed({
-            view.data = listOf(
-                900F,
-                220F,
-                250F,
-                260F,
-                100F,
-            )
-        }, 3000)
 
-        val textView = findViewById<TextView>(R.id.label)
+        val root = findViewById<ViewGroup>(R.id.root)
 
-        view.startAnimation(
-            AnimationUtils.loadAnimation(this, R.anim.animation).apply {
-                setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation?) {
-                        textView.text = "onAnimationStart"
-                    }
+        val scene = Scene.getSceneForLayout(root, R.layout.end_scene, this)
 
-                    override fun onAnimationEnd(animation: Animation?) {
-                        textView.text = "onAnimationEnd"
-                    }
+        findViewById<View>(R.id.goButton).setOnClickListener {
+            TransitionManager.go(scene)
+        }
+        view.animate()
 
-                    override fun onAnimationRepeat(animation: Animation?) {
-                        textView.text = "onAnimationRepeat"
-                    }
+//        view.startAnimation(
+//            AnimationUtils.loadAnimation(this, R.anim.animation)
+//        )
+//        view.postDelayed({
+//            view.data = listOf(
+//                900F,
+//                220F,
+//                250F,
+//                260F,
+//                100F,
+//            )
+//        }, 3000)
 
-                })
-            }
-        )
+//        val textView = findViewById<TextView>(R.id.label)
+//
+//        view.startAnimation(
+//            AnimationUtils.loadAnimation(this, R.anim.animation).apply {
+//                setAnimationListener(object : Animation.AnimationListener {
+//                    override fun onAnimationStart(animation: Animation?) {
+//                        textView.text = "onAnimationStart"
+//                    }
+//
+//                    override fun onAnimationEnd(animation: Animation?) {
+//                        textView.text = "onAnimationEnd"
+//                    }
+//
+//                    override fun onAnimationRepeat(animation: Animation?) {
+//                        textView.text = "onAnimationRepeat"
+//                    }
+//
+//                })
+//            }
+//        )
 
     }
 }

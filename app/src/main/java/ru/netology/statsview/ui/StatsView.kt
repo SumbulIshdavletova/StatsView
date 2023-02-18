@@ -44,7 +44,13 @@ class StatsView @JvmOverloads constructor(
         }
     }
 
-    var data: List<Float> = emptyList()
+    var data: List<Float> = listOf(
+        900F,
+        220F,
+        250F,
+        260F,
+        100F,
+    )
         set(value) {
             field = value
             update()
@@ -101,13 +107,13 @@ class StatsView @JvmOverloads constructor(
             if (index != 0) {
                 paint.color = colors.getOrElse(index) { generateRandomColor() }
                 resultSum += datum
-                canvas.drawArc(oval, startAngle + startingAngle, angle * progress, false, paint)
+
+                canvas.drawArc(oval, startAngle, angle, false, paint)
+              //  canvas.drawArc(oval, startAngle + startingAngle, angle * progress, false, paint)
                 startAngle += angle
 
             }
-
         }
-
 
         canvas.drawText(
             "%.2f%%".format(resultSum * 100 / data[0]),
@@ -115,7 +121,6 @@ class StatsView @JvmOverloads constructor(
             center.y + textPaint.textSize / 4,
             textPaint
         )
-
 
     }
 
